@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSG Expert - Sistem Pengurusan OT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #1a237e;
+            --primary-light: #534bae;
+            --secondary-color: #00bcd4;
+            --accent-color: #ff6b35;
+            --success-color: #00c853;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 40px -10px rgba(0,0,0,0.1);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 18px;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .company-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .company-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .company-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .company-logo i {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+        
+        .company-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+        
+        .company-header .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+        
+        .header-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Form Section */
+        .form-section {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .section-header i {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Form Group */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .form-label i {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background: var(--light-bg);
+            color: var(--text-primary);
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+            background: white;
+        }
+        
+        /* OT Claim Section */
+        .ot-claim-section {
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe8cc 100%);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            border: 2px solid #ffd8b2;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ot-claim-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-color), #ff8c42);
+        }
+        
+        .ot-inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        
+        .input-with-icon input, .input-with-icon select {
+            padding-left: 36px;
+        }
+        
+        .ot-preview-box {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin: 16px 0;
+            border: 2px solid var(--success-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .ot-preview-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--success-color);
+            margin: 4px 0;
+        }
+        
+        .ot-preview-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        
+        .btn:active::after {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #00e676);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 200, 83, 0.15);
+        }
+        
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent-color), #ff8c42);
+            color: white;
+            width: 100%;
+            margin-top: 12px;
+        }
+        
+        .btn-accent:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* OT Items Container */
+        .ot-items-container {
+            margin-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .ot-items-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .ot-items-container::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+        
+        .ot-items-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .ot-item {
+            background: white;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .ot-item:hover {
+            transform: translateX(2px);
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary-color);
+        }
+        
+        .ot-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--success-color), var(--secondary-color));
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        }
+        
+        .ot-item-details {
+            flex: 1;
+        }
+        
+        .ot-item-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .ot-item-date {
+            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        .ot-item-time {
+            color: var(--accent-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .ot-item-stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        
+        .stat-badge {
+            background: var(--light-bg);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .stat-hours {
+            background: rgba(0, 200, 83, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stat-jenis {
+            background: rgba(0, 188, 212, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .btn-remove {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin-left: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-remove:hover {
+            transform: rotate(90deg);
+            background: #d32f2f;
+        }
+        
+        /* Monthly Summary */
+        .monthly-summary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        /* Comments Section */
+        .comments-section {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%);
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            margin: 16px 0;
+            border: 2px solid #dbe4ff;
+        }
+        
+        /* Approval Section */
+        .approval-section {
+            background: linear-gradient(135deg, #f0fff4 0%, #e6ffec 100%);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            border: 2px solid #c6f6d5;
+        }
+        
+        .approval-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 12px;
+        }
+        
+        @media (max-width: 1024px) {
+            .approval-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .approval-box {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        
+        .approval-header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .approval-header h4 {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .signature-canvas {
+            width: 100%;
+            height: 90px;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            background: white;
+            cursor: crosshair;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        
+        .signature-canvas:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .signature-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        
+        .btn-icon {
+            padding: 6px 10px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+        
+        .btn-icon-clear {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .btn-icon-clear:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-icon-save {
+            background: rgba(0, 200, 83, 0.1);
+            color: var(--success-color);
+        }
+        
+        .btn-icon-save:hover {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .approval-details {
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #26c6da);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 188, 212, 0.15);
+        }
+        
+        /* Save Data Toggle */
+        .save-toggle {
+            background: var(--light-bg);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            margin-top: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Preview Section */
+        .preview-section {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            position: sticky;
+            top: 24px;
+        }
+        
+        .preview-container {
+            background: var(--light-bg);
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            min-height: 300px;
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        
+        #previewContent {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            min-height: 200px;
+        }
+        
+        /* Holiday Info */
+        .holiday-info {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            margin: 12px 0;
+            border-left: 4px solid var(--warning-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .holiday-info i {
+            color: var(--warning-color);
+            font-size: 1rem;
+        }
+        
+        /* Footer */
+        .app-footer {
+            margin-top: 32px;
+            text-align: center;
+            padding: 16px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Messages */
+        .message {
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideIn 0.3s ease-out;
+            font-size: 0.85rem;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-8px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .error-message {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            min-width: 200px;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 16px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state i {
+            font-size: 2.5rem;
+            color: var(--border-color);
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        
+        .empty-state p {
+            font-size: 0.85rem;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            #printContent, #printContent * {
+                visibility: visible;
+            }
+            
+            #printContent {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 210mm;
+                height: 297mm;
+                padding: 20mm;
+                font-size: 11pt;
+                line-height: 1.4;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--light-bg);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .stat-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 style="margin-bottom: 8px; color: var(--primary-color); font-size: 1rem;">Memproses...</h3>
+            <p style="color: var(--text-secondary); font-size: 0.85rem;">Sila tunggu sebentar</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="company-header">
+            <div class="header-content">
+                <div class="company-logo">
+                    <i class="fas fa-building"></i>
+                    <h1>TSG EXPERT (M) SDN BHD</h1>
+                </div>
+                <p class="subtitle">Sistem Pengurusan Lebih Masa (OT)</p>
+                <p class="subtitle">Professional • Digital • Efficient</p>
+                <div class="header-tag">
+                    <i class="fas fa-badge-check"></i> Versi 3.2 • TNB System
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <!-- Form Input Section -->
+            <section class="form-section">
+                <div class="section-header">
+                    <i class="fas fa-file-alt"></i>
+                    <h2>BORANG PENUNTUTAN OT</h2>
+                </div>
+                
+                <!-- Messages -->
+                <div id="errorMessage" class="message error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText"></span>
+                </div>
+                <div id="successMessage" class="message success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="successText"></span>
+                </div>
+                
+                <!-- Personal Information -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-user"></i>
+                            NAMA PEKERJA
+                        </label>
+                        <input type="text" id="namaPekerja" class="form-input" placeholder="Nama penuh" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-id-card"></i>
+                            NO. KAD PENGENALAN
+                        </label>
+                        <input type="text" id="noKP" class="form-input" placeholder="000000-00-0000" required>
+                    </div>
+                    
+                    <!-- ZON -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-map"></i>
+                            ZON
+                        </label>
+                        <select id="zon" class="form-select">
+                            <option value="zon_a">ZON A</option>
+                            <option value="zon_b">ZON B</option>
+                            <option value="zon_c">ZON C</option>
+                            <option value="wjt">WJT</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Lokasi TNB -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-map-marker-alt"></i>
+                            LOKASI TNB
+                        </label>
+                        <select id="lokasi" class="form-select">
+                            <option value="tnb_hq">TNB HQ Bangsar</option>
+                            <option value="tnb_jalan_timur">TNB Jalan Timur</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- OT Claim Section -->
+                <div class="ot-claim-section">
+                    <div class="section-header">
+                        <i class="fas fa-business-time"></i>
+                        <h2>TUNTUTAN LEBIH MASA (OT)</h2>
+                    </div>
+                    
+                    <div class="ot-inputs-grid">
+                        <div class="input-with-icon form-group">
+                            <label class="form-label">
+                                <i class="fas fa-calendar-day"></i>
+                                TARIKH OT
+                            </label>
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="date" id="otTarikh" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-tags"></i>
+                                JENIS OT
+                            </label>
+                            <select id="jenisOT" class="form-select">
+                                <option value="biasa">OT Biasa</option>
+                                <option value="cuti_umum">Cuti Umum</option>
+                                <option value="hari_rehat">Hari Rehat</option>
+                                <option value="kecemasan">Kerja Kecemasan</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-with-icon form-group">
+                            <label class="form-label">
+                                <i class="fas fa-clock"></i>
+                                MULA OT
+                            </label>
+                            <i class="fas fa-play-circle"></i>
+                            <input type="time" id="otMula" class="form-input" value="18:00" required>
+                        </div>
+                        
+                        <div class="input-with-icon form-group">
+                            <label class="form-label">
+                                <i class="fas fa-clock"></i>
+                                TAMAT OT
+                            </label>
+                            <i class="fas fa-stop-circle"></i>
+                            <input type="time" id="otTamat" class="form-input" value="20:00" required>
+                        </div>
+                    </div>
+                    
+                    <!-- OT Preview -->
+                    <div class="ot-preview-box">
+                        <div class="ot-preview-label">JUMLAH JAM INI</div>
+                        <div class="ot-preview-value" id="currentOtHours">0.0 jam</div>
+                        <div class="ot-preview-label" id="currentOtRate">Kadar: 1x ganda</div>
+                    </div>
+                    
+                    <!-- Holiday Info -->
+                    <div id="holidayInfo" class="holiday-info" style="display: none;">
+                        <i class="fas fa-star"></i>
+                        <div id="holidayText"></div>
+                    </div>
+                    
+                    <!-- Add OT Button -->
+                    <button type="button" id="addOtBtn" class="btn btn-accent">
+                        <i class="fas fa-plus-circle"></i>
+                        TAMBAH TUNTUTAN OT
+                    </button>
+                    
+                    <!-- OT Items List -->
+                    <div class="ot-items-container" id="otItemsContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-clock"></i>
+                            <h3>Tiada Tuntutan OT</h3>
+                            <p>Isi tarikh dan waktu OT di atas, kemudian klik "Tambah Tuntutan OT"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Summary -->
+                <div class="monthly-summary" id="monthlySummary">
+                    <div style="text-align: center; position: relative; z-index: 1;">
+                        <h3 style="margin-bottom: 4px; font-size: 1rem;">
+                            <i class="fas fa-chart-bar"></i>
+                            RINGKASAN BULANAN
+                        </h3>
+                        <p style="opacity: 0.9; font-size: 0.8rem;">OT untuk bulan semasa</p>
+                    </div>
+                    <div class="summary-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="monthlyOtDays">0</div>
+                            <div class="stat-label">Hari OT</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="monthlyOtHours">0.0</div>
+                            <div class="stat-label">Jam OT</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="monthlyOtAmount">RM 0.00</div>
+                            <div class="stat-label">Jumlah Tuntutan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <div class="section-header">
+                        <i class="fas fa-comment-dots"></i>
+                        <h2>KOMEN / CATATAN TAMBAHAN</h2>
+                    </div>
+                    <textarea id="comments" class="form-textarea" rows="3" placeholder="Masukkan sebarang komen atau catatan tambahan..."></textarea>
+                </div>
+
+                <!-- Approval Section -->
+                <div class="approval-section">
+                    <div class="section-header">
+                        <i class="fas fa-check-circle"></i>
+                        <h2>PENGESAHAN DAN KELULUSAN</h2>
+                    </div>
+                    
+                    <div class="approval-grid">
+                        <!-- Pemohon -->
+                        <div class="approval-box">
+                            <div class="approval-header">
+                                <h4>PEMOHON</h4>
+                            </div>
+                            <canvas id="signaturePemohon" class="signature-canvas" width="280" height="90"></canvas>
+                            <div class="signature-buttons">
+                                <button type="button" id="clearPemohon" class="btn-icon btn-icon-clear">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                                <button type="button" id="savePemohon" class="btn-icon btn-icon-save">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                            <div class="approval-details">
+                                <div><strong>Nama:</strong> <span id="namaPemohonDisplay">-</span></div>
+                                <div><strong>Tarikh:</strong> <span id="tarikhPemohon">-</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Wakil IFM -->
+                        <div class="approval-box">
+                            <div class="approval-header">
+                                <h4>WAKIL IFM</h4>
+                            </div>
+                            <canvas id="signatureIFM" class="signature-canvas" width="280" height="90"></canvas>
+                            <div class="signature-buttons">
+                                <button type="button" id="clearIFM" class="btn-icon btn-icon-clear">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                                <button type="button" id="saveIFM" class="btn-icon btn-icon-save">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                            <div class="approval-details">
+                                <div><strong>Nama:</strong></div>
+                                <input type="text" id="namaIFM" class="form-input" placeholder="Nama Wakil IFM" style="margin-top: 4px; padding: 6px; font-size: 0.85rem;">
+                                <div style="margin-top: 6px;"><strong>Tarikh:</strong> <span id="tarikhIFM">-</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Wakil TSG -->
+                        <div class="approval-box">
+                            <div class="approval-header">
+                                <h4>WAKIL TSG</h4>
+                            </div>
+                            <canvas id="signatureTSG" class="signature-canvas" width="280" height="90"></canvas>
+                            <div class="signature-buttons">
+                                <button type="button" id="clearTSG" class="btn-icon btn-icon-clear">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                                <button type="button" id="saveTSG" class="btn-icon btn-icon-save">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                            <div class="approval-details">
+                                <div><strong>Nama:</strong></div>
+                                <input type="text" id="namaTSG" class="form-input" placeholder="Nama Wakil TSG" style="margin-top: 4px; padding: 6px; font-size: 0.85rem;">
+                                <div style="margin-top: 6px;"><strong>Tarikh:</strong> <span id="tarikhTSG">-</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Data Toggle -->
+                <div class="save-toggle">
+                    <div class="toggle-label">
+                        <i class="fas fa-database"></i>
+                        <span>Simpan Data ke Local Storage</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="saveDataToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button type="button" id="generateBtn" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i>
+                        Hasilkan Laporan
+                    </button>
+                    <button type="button" id="printBtn" class="btn btn-secondary">
+                        <i class="fas fa-print"></i>
+                        Print A4
+                    </button>
+                </div>
+            </section>
+
+            <!-- Preview Section -->
+            <section class="preview-section">
+                <div class="section-header">
+                    <i class="fas fa-eye"></i>
+                    <h2>PRATONTON LAPORAN</h2>
+                </div>
+                
+                <div class="preview-container">
+                    <div id="previewContent">
+                        <div class="empty-state">
+                            <i class="fas fa-file-pdf"></i>
+                            <h3>Laporan OT Akan Dipaparkan Di Sini</h3>
+                            <p>Klik butang "Hasilkan Laporan" untuk melihat pratonton laporan OT yang lengkap</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="statsCount">0</div>
+                        <div class="stat-title">Tuntutan OT</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statsHours">0.0</div>
+                        <div class="stat-title">Total Jam</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer class="app-footer">
+            <p><strong>TSG EXPERT (M) SDN BHD - Sistem Pengurusan OT</strong></p>
+            <p style="margin-top: 4px; font-size: 0.75rem;">
+                <i class="fas fa-map-marker-alt"></i> TNB System • 
+                <i class="fas fa-database"></i> Auto Save Toggle • 
+                <i class="fas fa-mobile-alt"></i> Responsive
+            </p>
+        </footer>
+    </div>
+    
+    <!-- Print Content (Hidden until printing) -->
+    <div id="printContent" style="display: none;"></div>
+
+    <script>
+        // Data Cuti Malaysia 2024
+        const cutiMalaysia = {
+            "2024-01-01": "Tahun Baru",
+            "2024-01-24": "Hari Wilayah Persekutuan",
+            "2024-02-10": "Tahun Baru Cina",
+            "2024-02-11": "Tahun Baru Cina (Hari 2)",
+            "2024-03-27": "Israk dan Mikraj",
+            "2024-04-10": "Hari Raya Aidilfitri",
+            "2024-04-11": "Hari Raya Aidilfitri (Hari 2)",
+            "2024-05-01": "Hari Pekerja",
+            "2024-05-22": "Hari Wesak",
+            "2024-06-03": "Hari Keputeraan Yang di-Pertuan Agong",
+            "2024-06-17": "Hari Raya Aidiladha",
+            "2024-07-07": "Awal Muharam",
+            "2024-08-31": "Hari Kebangsaan",
+            "2024-09-16": "Hari Malaysia",
+            "2024-10-31": "Maulidur Rasul",
+            "2024-12-25": "Hari Krismas"
+        };
+
+        // Kadar OT
+        const otRates = {
+            biasa: 1.0,
+            cuti_umum: 2.0,
+            hari_rehat: 1.5,
+            kecemasan: 2.0
+        };
+
+        // Zon Descriptions
+        const zonDescriptions = {
+            'zon_a': 'ZON A',
+            'zon_b': 'ZON B', 
+            'zon_c': 'ZON C',
+            'wjt': 'WJT'
+        };
+
+        // Lokasi Descriptions
+        const lokasiDescriptions = {
+            'tnb_hq': 'TNB HQ Bangsar',
+            'tnb_jalan_timur': 'TNB Jalan Timur'
+        };
+
+        // Global variables
+        let otItems = [];
+        let monthlySummary = {
+            days: 0,
+            hours: 0,
+            amount: 0
+        };
+        let isSaveEnabled = true;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('otTarikh').value = today;
+            
+            // Initialize signature pads
+            initSignaturePads();
+            
+            // Attach event listeners
+            attachEventListeners();
+            
+            // Calculate initial OT hours
+            calculateCurrentOTHours();
+            
+            // Load saved data if enabled
+            loadSavedData();
+            
+            // Update dates
+            updateDates();
+            setInterval(updateDates, 60000);
+            
+            // Check holiday
+            checkHoliday(today);
+            
+            // Welcome message
+            setTimeout(() => {
+                showMessage('Sistem Pengurusan OT TSG Expert sedia digunakan. Data auto-save: ' + (isSaveEnabled ? 'ON' : 'OFF'), 'success');
+            }, 1000);
+        });
+        
+        function updateDates() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ms-MY', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            document.getElementById('tarikhPemohon').textContent = dateStr;
+            document.getElementById('tarikhIFM').textContent = dateStr;
+            document.getElementById('tarikhTSG').textContent = dateStr;
+        }
+        
+        function checkHoliday(date) {
+            const holidayInfo = document.getElementById('holidayInfo');
+            const holidayText = document.getElementById('holidayText');
+            
+            if (cutiMalaysia[date]) {
+                holidayInfo.style.display = 'flex';
+                holidayText.innerHTML = `
+                    <div>
+                        <strong>CUTI UMUM: ${cutiMalaysia[date]}</strong><br>
+                        <small>Kadar OT: 2x ganda - Auto set ke "Cuti Umum"</small>
+                    </div>
+                `;
+                
+                // Auto set jenis OT
+                document.getElementById('jenisOT').value = 'cuti_umum';
+            } else {
+                holidayInfo.style.display = 'none';
+            }
+        }
+        
+        function initSignaturePads() {
+            const canvases = [
+                { id: 'signaturePemohon', type: 'pemohon' },
+                { id: 'signatureIFM', type: 'ifm' },
+                { id: 'signatureTSG', type: 'tsg' }
+            ];
+            
+            canvases.forEach(canvasInfo => {
+                const canvas = document.getElementById(canvasInfo.id);
+                const ctx = canvas.getContext('2d');
+                
+                // Set background
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Drawing setup
+                let drawing = false;
+                let lastX = 0;
+                let lastY = 0;
+                
+                ctx.lineWidth = 2;
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#1a237e';
+                
+                function startDrawing(e) {
+                    drawing = true;
+                    const rect = canvas.getBoundingClientRect();
+                    lastX = e.clientX - rect.left;
+                    lastY = e.clientY - rect.top;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                }
+                
+                function draw(e) {
+                    if (!drawing) return;
+                    
+                    const rect = canvas.getBoundingClientRect();
+                    const currentX = e.clientX - rect.left;
+                    const currentY = e.clientY - rect.top;
+                    
+                    ctx.lineTo(currentX, currentY);
+                    ctx.stroke();
+                    
+                    lastX = currentX;
+                    lastY = currentY;
+                }
+                
+                function stopDrawing() {
+                    drawing = false;
+                    if (isSaveEnabled) {
+                        saveSignature(canvas, canvasInfo.type);
+                    }
+                }
+                
+                // Mouse events
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+                
+                // Touch events
+                canvas.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const mouseEvent = new MouseEvent('mousedown', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    });
+                    canvas.dispatchEvent(mouseEvent);
+                });
+                
+                canvas.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const mouseEvent = new MouseEvent('mousemove', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    });
+                    canvas.dispatchEvent(mouseEvent);
+                });
+                
+                canvas.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    const mouseEvent = new MouseEvent('mouseup', {});
+                    canvas.dispatchEvent(mouseEvent);
+                });
+                
+                // Load saved signature if save is enabled
+                if (isSaveEnabled) {
+                    const savedSignature = localStorage.getItem(`signature_${canvasInfo.type}`);
+                    if (savedSignature) {
+                        const img = new Image();
+                        img.onload = function() {
+                            ctx.drawImage(img, 0, 0);
+                        };
+                        img.src = savedSignature;
+                    }
+                }
+            });
+            
+            // Clear buttons
+            document.getElementById('clearPemohon').addEventListener('click', () => clearSignature('signaturePemohon', 'pemohon'));
+            document.getElementById('clearIFM').addEventListener('click', () => clearSignature('signatureIFM', 'ifm'));
+            document.getElementById('clearTSG').addEventListener('click', () => clearSignature('signatureTSG', 'tsg'));
+            
+            // Save buttons
+            document.getElementById('savePemohon').addEventListener('click', () => saveSignature(document.getElementById('signaturePemohon'), 'pemohon'));
+            document.getElementById('saveIFM').addEventListener('click', () => saveSignature(document.getElementById('signatureIFM'), 'ifm'));
+            document.getElementById('saveTSG').addEventListener('click', () => saveSignature(document.getElementById('signatureTSG'), 'tsg'));
+        }
+        
+        function clearSignature(canvasId, type) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (isSaveEnabled) {
+                localStorage.removeItem(`signature_${type}`);
+            }
+            
+            showMessage('Tandatangan telah dipadam', 'success');
+        }
+        
+        function saveSignature(canvasElement, type) {
+            if (isCanvasEmpty(canvasElement)) {
+                showMessage('Sila tandatangan terlebih dahulu', 'error');
+                return;
+            }
+            
+            const dataURL = canvasElement.toDataURL('image/png');
+            
+            if (isSaveEnabled) {
+                localStorage.setItem(`signature_${type}`, dataURL);
+            }
+            
+            showMessage('Tandatangan telah disimpan', 'success');
+        }
+        
+        function isCanvasEmpty(canvasElement) {
+            const ctx = canvasElement.getContext('2d');
+            const pixelData = ctx.getImageData(0, 0, canvasElement.width, canvasElement.height).data;
+            
+            for (let i = 0; i < pixelData.length; i += 4) {
+                if (pixelData[i] !== 255 || pixelData[i + 1] !== 255 || pixelData[i + 2] !== 255) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        function attachEventListeners() {
+            // Save data toggle
+            const saveToggle = document.getElementById('saveDataToggle');
+            saveToggle.addEventListener('change', function() {
+                isSaveEnabled = this.checked;
+                showMessage('Auto-save: ' + (isSaveEnabled ? 'ON' : 'OFF'), 'success');
+                
+                if (isSaveEnabled) {
+                    saveToLocalStorage();
+                }
+            });
+            
+            // OT date change
+            document.getElementById('otTarikh').addEventListener('change', function(e) {
+                checkHoliday(e.target.value);
+                calculateCurrentOTHours();
+                if (isSaveEnabled) saveToLocalStorage();
+            });
+            
+            // OT time change
+            document.getElementById('otMula').addEventListener('change', calculateCurrentOTHours);
+            document.getElementById('otTamat').addEventListener('change', calculateCurrentOTHours);
+            
+            // Jenis OT change
+            document.getElementById('jenisOT').addEventListener('change', function() {
+                calculateCurrentOTHours();
+                if (isSaveEnabled) saveToLocalStorage();
+            });
+            
+            // Add OT button
+            document.getElementById('addOtBtn').addEventListener('click', addOTItem);
+            
+            // Employee name change
+            document.getElementById('namaPekerja').addEventListener('input', function() {
+                document.getElementById('namaPemohonDisplay').textContent = this.value || '-';
+                if (isSaveEnabled) saveToLocalStorage();
+            });
+            
+            // Generate report
+            document.getElementById('generateBtn').addEventListener('click', generateReport);
+            
+            // Print button
+            document.getElementById('printBtn').addEventListener('click', printReport);
+            
+            // Auto-save for input fields
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('input', function() {
+                    if (isSaveEnabled) saveToLocalStorage();
+                });
+                element.addEventListener('change', function() {
+                    if (isSaveEnabled) saveToLocalStorage();
+                });
+            });
+        }
+        
+        function calculateCurrentOTHours() {
+            const otMula = document.getElementById('otMula').value;
+            const otTamat = document.getElementById('otTamat').value;
+            const jenisOT = document.getElementById('jenisOT').value;
+            
+            if (otMula && otTamat) {
+                const hours = calculateTimeDifference(otMula, otTamat);
+                const rate = otRates[jenisOT] || 1.0;
+                
+                if (hours > 0) {
+                    document.getElementById('currentOtHours').textContent = `${hours.toFixed(1)} jam`;
+                    document.getElementById('currentOtRate').textContent = `Kadar: ${rate}x ganda`;
+                } else {
+                    document.getElementById('currentOtHours').textContent = '0.0 jam';
+                    document.getElementById('currentOtRate').textContent = 'Kadar: 1x ganda';
+                    if (hours < 0) {
+                        showMessage('Waktu tamat OT mesti selepas waktu mula OT', 'error');
+                    }
+                }
+            }
+        }
+        
+        function calculateTimeDifference(startTime, endTime) {
+            if (!startTime || !endTime) return 0;
+            
+            const start = parseTime(startTime);
+            const end = parseTime(endTime);
+            
+            let hours = (end - start) / (1000 * 60 * 60);
+            if (hours < 0) hours += 24;
+            
+            return hours;
+        }
+        
+        function parseTime(timeStr) {
+            if (!timeStr) return new Date();
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours, minutes, 0, 0);
+            return date;
+        }
+        
+        function addOTItem() {
+            const otTarikh = document.getElementById('otTarikh').value;
+            const otMula = document.getElementById('otMula').value;
+            const otTamat = document.getElementById('otTamat').value;
+            const jenisOT = document.getElementById('jenisOT').value;
+            
+            // Validation
+            if (!otTarikh) {
+                showMessage('Sila pilih tarikh OT', 'error');
+                return;
+            }
+            
+            if (!otMula || !otTamat) {
+                showMessage('Sila isi waktu mula dan tamat OT', 'error');
+                return;
+            }
+            
+            const hours = calculateTimeDifference(otMula, otTamat);
+            if (hours <= 0) {
+                showMessage('Waktu tamat OT mesti selepas waktu mula OT', 'error');
+                return;
+            }
+            
+            // Create OT item
+            const rate = otRates[jenisOT] || 1.0;
+            const otItem = {
+                id: Date.now(),
+                date: otTarikh,
+                start: otMula,
+                end: otTamat,
+                hours: hours,
+                jenis: jenisOT,
+                rate: rate
+            };
+            
+            // Add to array
+            otItems.push(otItem);
+            
+            // Update displays
+            updateOTItemsDisplay();
+            updateMonthlySummary();
+            updateQuickStats();
+            
+            // Clear inputs
+            document.getElementById('otMula').value = '';
+            document.getElementById('otTamat').value = '';
+            
+            // Save if enabled
+            if (isSaveEnabled) saveToLocalStorage();
+            
+            // Success message
+            showMessage(`Tuntutan OT berjaya ditambah (${hours.toFixed(1)} jam)`, 'success');
+        }
+        
+        function removeOTItem(id) {
+            otItems = otItems.filter(item => item.id !== id);
+            updateOTItemsDisplay();
+            updateMonthlySummary();
+            updateQuickStats();
+            if (isSaveEnabled) saveToLocalStorage();
+            showMessage('Tuntutan OT telah dipadam', 'success');
+        }
+        
+        function updateOTItemsDisplay() {
+            const container = document.getElementById('otItemsContainer');
+            
+            if (otItems.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clock"></i>
+                        <h3>Tiada Tuntutan OT</h3>
+                        <p>Isi tarikh dan waktu OT di atas, kemudian klik "Tambah Tuntutan OT"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by date (newest first)
+            otItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            let html = '';
+            otItems.forEach((item) => {
+                const dateStr = formatDate(item.date);
+                const jenisOTLabels = {
+                    'biasa': 'OT Biasa',
+                    'cuti_umum': 'Cuti Umum',
+                    'hari_rehat': 'Hari Rehat',
+                    'kecemasan': 'Kecemasan'
+                };
+                
+                html += `
+                    <div class="ot-item" data-id="${item.id}">
+                        <div class="ot-item-details">
+                            <div class="ot-item-header">
+                                <div class="ot-item-date">
+                                    <i class="fas fa-calendar-day"></i> ${dateStr}
+                                </div>
+                                <div class="ot-item-time">
+                                    <i class="fas fa-clock"></i> ${item.start} - ${item.end}
+                                </div>
+                            </div>
+                            <div class="ot-item-stats">
+                                <span class="stat-badge stat-hours">${item.hours.toFixed(1)} jam</span>
+                                <span class="stat-badge stat-jenis">${jenisOTLabels[item.jenis]}</span>
+                            </div>
+                        </div>
+                        <button class="btn-remove" onclick="removeOTItem(${item.id})" title="Padam">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function updateMonthlySummary() {
+            if (otItems.length === 0) {
+                // Kosongkan nilai apabila tiada data
+                document.getElementById('monthlyOtDays').textContent = "0";
+                document.getElementById('monthlyOtHours').textContent = "0.0";
+                document.getElementById('monthlyOtAmount').textContent = "RM 0.00";
+                return;
+            }
+            
+            // Get current month
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            // Filter items for current month
+            const monthlyItems = otItems.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate.getMonth() === currentMonth && itemDate.getFullYear() === currentYear;
+            });
+            
+            if (monthlyItems.length === 0) {
+                // Kosongkan nilai apabila tiada data untuk bulan semasa
+                document.getElementById('monthlyOtDays').textContent = "0";
+                document.getElementById('monthlyOtHours').textContent = "0.0";
+                document.getElementById('monthlyOtAmount').textContent = "RM 0.00";
+                return;
+            }
+            
+            // Calculate summary
+            const uniqueDates = [...new Set(monthlyItems.map(item => item.date))];
+            monthlySummary.days = uniqueDates.length;
+            monthlySummary.hours = monthlyItems.reduce((sum, item) => sum + item.hours, 0);
+            monthlySummary.amount = 0;
+            
+            // Update display
+            document.getElementById('monthlyOtDays').textContent = monthlySummary.days;
+            document.getElementById('monthlyOtHours').textContent = monthlySummary.hours.toFixed(1);
+            document.getElementById('monthlyOtAmount').textContent = `RM 0.00`;
+        }
+        
+        function updateQuickStats() {
+            if (otItems.length === 0) {
+                // Kosongkan nilai apabila tiada data
+                document.getElementById('statsCount').textContent = "0";
+                document.getElementById('statsHours').textContent = "0.0";
+                return;
+            }
+            
+            const totalHours = otItems.reduce((sum, item) => sum + item.hours, 0);
+            document.getElementById('statsCount').textContent = otItems.length;
+            document.getElementById('statsHours').textContent = totalHours.toFixed(1);
+        }
+        
+        function generateReport() {
+            // Validation
+            if (!validateForm()) {
+                return;
+            }
+            
+            if (otItems.length === 0) {
+                showMessage('Sila tambah sekurang-kurangnya satu tuntutan OT', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            setTimeout(() => {
+                const nama = document.getElementById('namaPekerja').value;
+                const noKP = document.getElementById('noKP').value;
+                const zon = zonDescriptions[document.getElementById('zon').value] || document.getElementById('zon').value;
+                const lokasi = lokasiDescriptions[document.getElementById('lokasi').value] || document.getElementById('lokasi').value;
+                const comments = document.getElementById('comments').value;
+                const namaIFM = document.getElementById('namaIFM').value;
+                const namaTSG = document.getElementById('namaTSG').value;
+                
+                // Create report HTML
+                const reportHTML = createReportHTML(nama, noKP, zon, lokasi, comments, namaIFM, namaTSG);
+                
+                // Update preview
+                document.getElementById('previewContent').innerHTML = reportHTML;
+                
+                // Update print content
+                document.getElementById('printContent').innerHTML = reportHTML;
+                
+                showLoading(false);
+                showMessage('Laporan telah dihasilkan. Sedia untuk print.', 'success');
+            }, 800);
+        }
+        
+        function createReportHTML(nama, noKP, zon, lokasi, comments, namaIFM, namaTSG) {
+            // Format dates
+            const currentDate = new Date();
+            const reportDate = currentDate.toLocaleDateString('ms-MY', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                weekday: 'long'
+            });
+            
+            // Group OT items by date
+            const otByDate = {};
+            otItems.forEach(item => {
+                if (!otByDate[item.date]) {
+                    otByDate[item.date] = [];
+                }
+                otByDate[item.date].push(item);
+            });
+            
+            // Create OT table rows
+            let otTableRows = '';
+            let totalHours = 0;
+            
+            Object.keys(otByDate).sort().forEach(date => {
+                const dateItems = otByDate[date];
+                const dateStr = formatDate(date);
+                
+                dateItems.forEach((item, index) => {
+                    const jenisOTLabels = {
+                        'biasa': 'Biasa',
+                        'cuti_umum': 'Cuti Umum',
+                        'hari_rehat': 'Hari Rehat',
+                        'kecemasan': 'Kecemasan'
+                    };
+                    
+                    otTableRows += `
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${dateStr}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${item.start}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${item.end}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${item.hours.toFixed(1)}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${jenisOTLabels[item.jenis]}</td>
+                        </tr>
+                    `;
+                    
+                    totalHours += item.hours;
+                });
+            });
+            
+            return `
+                <div style="padding: 15mm; font-family: 'Arial', sans-serif; font-size: 11pt; line-height: 1.4;">
+                    <!-- Header -->
+                    <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1a237e; padding-bottom: 15px;">
+                        <h1 style="color: #1a237e; margin: 0; font-size: 20pt; font-weight: bold;">TSG EXPERT (M) SDN BHD</h1>
+                        <p style="margin: 4px 0; color: #555; font-size: 12pt;">Sistem Pengurusan Lebih Masa (OT)</p>
+                        <h2 style="color: #1a237e; margin: 10px 0; font-size: 16pt; font-weight: bold;">BORANG TUNTUTAN LEBIH MASA</h2>
+                        <div style="display: flex; justify-content: space-between; font-size: 9pt; margin-top: 12px;">
+                            <div><strong>No. Rujukan:</strong> OT/TSG/${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(Math.floor(1000 + Math.random() * 9000))}</div>
+                            <div><strong>Tarikh Laporan:</strong> ${reportDate}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Maklumat Pekerja -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="background: #1a237e; color: white; padding: 10px; border-radius: 4px; font-size: 12pt; margin-bottom: 15px;">A. MAKLUMAT PEKERJA</h3>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 10pt;">
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd; width: 25%;"><strong>Nama Pekerja:</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">${nama}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>No. Kad Pengenalan:</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">${noKP}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Zon:</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">${zon}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Lokasi TNB:</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">${lokasi}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <!-- Butiran Tuntutan OT -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="background: #ff6b35; color: white; padding: 10px; border-radius: 4px; font-size: 12pt; margin-bottom: 15px;">B. BUTIRAN TUNTUTAN LEBIH MASA</h3>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px;">
+                            <thead>
+                                <tr style="background: #f5f5f5;">
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Tarikh</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Mula</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Tamat</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Jam</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Jenis OT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${otTableRows}
+                                <tr style="background: #e8f5e9; font-weight: bold;">
+                                    <td colspan="3" style="padding: 12px; border: 1px solid #ddd; text-align: right;">JUMLAH KESELURUHAN:</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${totalHours.toFixed(1)}</td>
+                                    <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Komen / Catatan -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="background: #8e24aa; color: white; padding: 10px; border-radius: 4px; font-size: 12pt; margin-bottom: 15px;">C. KOMEN / CATATAN TAMBAHAN</h3>
+                        <div style="padding: 15px; border: 1px solid #ddd; border-radius: 4px; min-height: 80px; background: #fafafa;">
+                            ${comments || '<em style="color: #999;">Tiada komen atau catatan tambahan.</em>'}
+                        </div>
+                    </div>
+                    
+                    <!-- Pengesahan -->
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="background: #1a237e; color: white; padding: 10px; border-radius: 4px; font-size: 12pt; margin-bottom: 20px;">D. PENGESAHAN DAN KELULUSAN</h3>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <div style="text-align: center; width: 30%;">
+                                <div style="border: 1px solid #000; height: 80px; margin-bottom: 10px; background: white;"></div>
+                                <div style="border-top: 1px solid #000; padding-top: 10px; font-size: 10pt;">
+                                    <strong>PEMOHON</strong><br>
+                                    ${nama}<br>
+                                    <small>Tarikh: ${currentDate.toLocaleDateString('ms-MY')}</small>
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 30%;">
+                                <div style="border: 1px solid #000; height: 80px; margin-bottom: 10px; background: white;"></div>
+                                <div style="border-top: 1px solid #000; padding-top: 10px; font-size: 10pt;">
+                                    <strong>WAKIL IFM</strong><br>
+                                    ${namaIFM || '<em style="color: #999;">Belum disahkan</em>'}<br>
+                                    <small>Tarikh: ${currentDate.toLocaleDateString('ms-MY')}</small>
+                                </div>
+                            </div>
+                            <div style="text-align: center; width: 30%;">
+                                <div style="border: 1px solid #000; height: 80px; margin-bottom: 10px; background: white;"></div>
+                                <div style="border-top: 1px solid #000; padding-top: 10px; font-size: 10pt;">
+                                    <strong>WAKIL TSG</strong><br>
+                                    ${namaTSG || '<em style="color: #999;">Belum diluluskan</em>'}<br>
+                                    <small>Tarikh: ${currentDate.toLocaleDateString('ms-MY')}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div style="margin-top: 30px; padding-top: 15px; border-top: 2px solid #ddd; font-size: 9pt; color: #666;">
+                        <p><strong>NOTA DAN PERINGATAN:</strong></p>
+                        <ol style="padding-left: 20px; margin-bottom: 20px;">
+                            <li>Borang ini mesti diisi dengan lengkap dan tepat.</li>
+                            <li>Tuntutan OT mesti disahkan oleh Wakil IFM sebelum diproses.</li>
+                            <li>Kelulusan akhir adalah di bawah bidang kuasa Wakil TSG.</li>
+                            <li>OT pada cuti umum: Kadar 2x ganda.</li>
+                            <li>OT pada hari rehat: Kadar 1.5x ganda.</li>
+                            <li>Semua tuntutan adalah berdasarkan Kalendar Kuala Lumpur.</li>
+                            <li>Dokumen ini adalah sulit dan untuk kegunaan dalaman sahaja.</li>
+                        </ol>
+                        <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 4px; border: 1px solid #ddd;">
+                            <strong>DOKUMEN RASMI TSG EXPERT (M) SDN BHD - JANGAN BUANG</strong><br>
+                            <small>Rujukan: TSG/HR/OT/FORM/2024/03</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function validateForm() {
+            const nama = document.getElementById('namaPekerja').value;
+            const noKP = document.getElementById('noKP').value;
+            
+            if (!nama || nama.trim() === '') {
+                showMessage('Sila isi nama pekerja', 'error');
+                return false;
+            }
+            
+            if (!noKP || noKP.trim() === '') {
+                showMessage('Sila isi nombor kad pengenalan', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function printReport() {
+            const printContent = document.getElementById('printContent');
+            if (!printContent.innerHTML || otItems.length === 0) {
+                showMessage('Sila hasilkan laporan terlebih dahulu sebelum print', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            setTimeout(() => {
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Laporan OT - ${document.getElementById('namaPekerja').value}</title>
+                        <style>
+                            @media print {
+                                @page {
+                                    size: A4 portrait;
+                                    margin: 15mm;
+                                }
+                                body {
+                                    font-family: 'Arial', sans-serif;
+                                    font-size: 11pt;
+                                    line-height: 1.4;
+                                    margin: 0;
+                                    padding: 0;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${printContent.innerHTML}
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                                setTimeout(function() {
+                                    window.close();
+                                }, 1000);
+                            }
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+                
+                showLoading(false);
+                showMessage('Dokumen sedang diprint...', 'success');
+            }, 800);
+        }
+        
+        function saveToLocalStorage() {
+            if (!isSaveEnabled) return;
+            
+            const formData = {
+                namaPekerja: document.getElementById('namaPekerja').value,
+                noKP: document.getElementById('noKP').value,
+                zon: document.getElementById('zon').value,
+                lokasi: document.getElementById('lokasi').value,
+                comments: document.getElementById('comments').value,
+                namaIFM: document.getElementById('namaIFM').value,
+                namaTSG: document.getElementById('namaTSG').value,
+                otItems: otItems,
+                monthlySummary: monthlySummary,
+                isSaveEnabled: isSaveEnabled
+            };
+            
+            localStorage.setItem('otFormData', JSON.stringify(formData));
+            
+            // Update pemohon display
+            document.getElementById('namaPemohonDisplay').textContent = formData.namaPekerja || '-';
+        }
+        
+        function loadSavedData() {
+            // Check if save is enabled
+            const saveToggle = document.getElementById('saveDataToggle');
+            isSaveEnabled = saveToggle.checked;
+            
+            if (!isSaveEnabled) return;
+            
+            const saved = localStorage.getItem('otFormData');
+            if (saved) {
+                try {
+                    const formData = JSON.parse(saved);
+                    
+                    // Load form fields
+                    document.getElementById('namaPekerja').value = formData.namaPekerja || '';
+                    document.getElementById('noKP').value = formData.noKP || '';
+                    document.getElementById('zon').value = formData.zon || 'zon_a';
+                    document.getElementById('lokasi').value = formData.lokasi || 'tnb_hq';
+                    document.getElementById('comments').value = formData.comments || '';
+                    document.getElementById('namaIFM').value = formData.namaIFM || '';
+                    document.getElementById('namaTSG').value = formData.namaTSG || '';
+                    
+                    // Load OT items
+                    if (formData.otItems && Array.isArray(formData.otItems)) {
+                        otItems = formData.otItems;
+                        updateOTItemsDisplay();
+                    }
+                    
+                    // Load monthly summary
+                    if (formData.monthlySummary) {
+                        monthlySummary = formData.monthlySummary;
+                        updateMonthlySummary();
+                    }
+                    
+                    // Check holiday
+                    checkHoliday(document.getElementById('otTarikh').value);
+                    
+                    // Calculate current OT hours
+                    calculateCurrentOTHours();
+                    
+                    // Update displays
+                    updateQuickStats();
+                    document.getElementById('namaPemohonDisplay').textContent = formData.namaPekerja || '-';
+                    
+                    // Show loaded message
+                    setTimeout(() => {
+                        showMessage('Data sebelumnya telah dimuatkan', 'success');
+                    }, 500);
+                    
+                } catch (e) {
+                    console.error('Error loading saved data:', e);
+                    // Clear corrupted data
+                    localStorage.removeItem('otFormData');
+                }
+            }
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ms-MY', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+        
+        function showMessage(message, type) {
+            // Hide all messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Show message
+            const messageDiv = document.getElementById(`${type}Message`);
+            const messageText = document.getElementById(`${type}Text`);
+            messageText.textContent = message;
+            messageDiv.style.display = 'flex';
+            
+            // Auto hide
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 4000);
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+        
+        // Expose functions globally
+        window.removeOTItem = removeOTItem;
+    </script>
+</body>
+</html>
